@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zercom Test</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <header class="header">Zercom Test</header>
+    <div class="container mt-5">
+      <h1 class="my-5 subheader">Course Categories</h1>
+      <div id="categories" class="categories-con"></div>
+    </div>
+    <div class="container mt-3">
+      <h1 class="my-5 subheader">Courses list for each categories or sub-categories</h1>
+      <div id="sub-categories" class="categories-con"></div>
+    </div>
+    <div class="container mt-3">
+      <h1 class="my-5 subheader">Course Details</h1>
+      <div id="sub-category-courses" class="categories-con"></div>
+    </div>
+
+    <script>
+      // Base URL and API endpoints
+      const baseUrl = "https://humanmanager.tangerinelms.com/www/api/v1";
+      const courseCategoriesEndpoint = "/get_course_catalogue.php";
+
+      // Function to fetch course categories
+      async function fetchCourseCategories() {
+        try {
+          const response = await fetch(`${baseUrl}${courseCategoriesEndpoint}`);
+          if (!response.ok) {
+            throw new Error(
+              `Error fetching course categories. Status: ${response.status}`
+            );
+          }
+
+          const data = await response.json();
+          displayCourseCategories(data.data);
+        } catch (error) {
+          console.error("Error fetching course categories:", error.message);
+        }
+      }
+
+      // Function to display course categories
+      function displayCourseCategories(categories) {
+        const categoriesContainer = document.getElementById("categories");
+        categoriesContainer.innerHTML = "";
+
+        categories.map((category) => {
+          const categoryElement = document.createElement("div");
+          categoryElement.innerHTML = `
+                    <div class="categories shadow-lg p1 mb-5 bg-white rounded">
+                        <img src="${category.Image}" alt="" class="category-image" >
+                        <h4 class="">${category.Name}</h4>
+                        <a href="#" onclick="fetchSubCategories('${category.Path}')">View Sub Categories</a>
+                    </div>
+                `;
+          categoriesContainer.appendChild(categoryElement);
+        });
+      }
+
+      // Function to fetch sub-categories
+      async function fetchSubCategories(categoryPath) {
+        const subCategoriesEndpoint = `/get_category_courses.php?category=${categoryPath}`;
+        try {
+          const response = await fetch(`${baseUrl}${subCategoriesEndpoint}`);
+          if (!response.ok) {
+            throw new Error(
+              `Error fetching sub-categories. Status: ${response.status}`
+            );
+          }
+
+          const data = await response.json();
+          displaySubCategories(data.data);
+          console.log(data, "sub-cat");
+        } catch (error) {
+          console.error("Error fetching sub-categories:", error.message);
+        }
+      }
+
+// Function to display sub-categories
+function displaySubCategories(subCategories) {
+    const subCategoriesContainer = document.getElementById("sub-categories");
+    subCategoriesContainer.innerHTML = "";
+
+    const subCat = subCategories.courses;
+    console.log(subCategories, "subCategories");
+    console.log(subCat, "subCa");
+
+    const tableElement = document.createElement("table");
+    tableElement.style.width = "100%";
+
+    // Create table header
+    const tableHeader = document.createElement("tr");
+    tableHeader.innerHTML = `
+        <th>CourseID</th>
+        <th>Course Title</th>
+        <th>Training Time</th>
+    `;
+    tableElement.appendChild(tableHeader);
+
+    // Create table rows using map
+    subCat.map((subCategory) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${subCategory.CourseID}</td>
+            <td>${subCategory.CourseTitle}</td>
+            <td>${subCategory.HoursOfTraining}</td>
+        `;
+        tableElement.appendChild(row);
+    });
+
+    const containerDiv = document.createElement("div");
+    containerDiv.classList.add("p-3");
+    containerDiv.appendChild(tableElement);
+
+    const viewLink = document.createElement("a");
+    viewLink.href = "#";
+    viewLink.textContent = "View Sub Category Courses";
+    viewLink.onclick = () => fetchSubCategoryCourses(subCategories.Path);
+
+    containerDiv.appendChild(viewLink);
+    subCategoriesContainer.appendChild(containerDiv);
+}
+
+      // Function to fetch sub-category courses
+      async function fetchSubCategoryCourses(subCategoryPath) {
+        const subCategoryCoursesEndpoint = `/get_sub_category_courses.php?category=${subCategoryPath}`;
+        try {
+          const response = await fetch(
+            `${baseUrl}${subCategoryCoursesEndpoint}`
+          );
+          if (!response.ok) {
+            throw new Error(
+              `Error fetching sub-category courses. Status: ${response.status}`
+            );
+          }
+
+          const data = await response.json();
+          displaySubCategoryCourses(data.data);
+        } catch (error) {
+          console.error("Error fetching sub-category courses:", error.message);
+        }
+      }
+
+      
+
+
+      // Function to display sub-category courses
+      function displaySubCategoryCourses(subCategoryCourses) {
+        const subCategoryCoursesContainer = document.getElementById(
+          "sub-category-courses"
+        );
+        subCategoryCoursesContainer.innerHTML = "";
+
+        console.log(subCategoryCourses, "subCategoryCourses");
+        subCategoryCourses.map((course) => {
+          const courseElement = document.createElement("div");
+          courseElement.innerHTML = `
+                    <div class="categories shadow-lg p-3 mb-5 bg-white rounded">
+                        <h4>${course.CourseName}</h4>
+                    </div>
+                `;
+          subCategoryCoursesContainer.appendChild(courseElement);
+        });
+      }
+
+      // I Initialize the page by fetching and displaying categories
+      fetchCourseCategories();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

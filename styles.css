@@ -1,0 +1,47 @@
+body {
+    /* background-color:bisque; */
+    background-image: url(https://zercomsystems.com/wp-content/uploads/2019/09/Vector-Zercom-Logo.png);
+    background-repeat: no-repeat;
+    /* background-position: center; */
+    background-size: 200px;
+    margin: 0;
+}
+
+.header {
+    text-align: center;
+    font-size: 50px;
+    font-weight: 900;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #cf2e2e;
+}
+
+.subheader {
+    color: #cf2e2e;
+}
+
+.categories-con {
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    /* justify-content: space-around; */
+    align-items: center;
+}
+
+.category-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    padding: 2px;
+}
+
+.categories {
+    width: 200px;
+    height: 220px;
+    border-radius: 10px;
+    background-color: white;
+    text-align: center;
+    align-items: center;
+    margin: auto;
+}
