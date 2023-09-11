@@ -2,7 +2,7 @@
 
 ## Project name
 
-Zercom Test 
+###Zercom Test 
 
 ## Project description
 
@@ -27,7 +27,7 @@ display course categories, sub-categories (if applicable), and courses.
 -  
 ### Live Link
 
--https://pscon.github.io/zercom-test
+- https://pscon.github.io/zercom-test
 - https://pscon.github.io/zercom-test/test.html
 
 
